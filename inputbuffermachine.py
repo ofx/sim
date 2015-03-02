@@ -49,7 +49,7 @@ class InputBufferMachine(Machine):
         assert self.elementsInBuffer > 0
 
         # Take n from the input buffer
-        self.elementsInBuffer
+        self.elementsInBuffer -= n
 
         # If we have reached some < 0 value here, this means we have non-valid logic at some other point
         assert self.elementsInBuffer >= 0

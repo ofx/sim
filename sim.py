@@ -75,14 +75,18 @@ class Sim:
                 \tIs busy (s): %r
                 \tIs full (s): %r
                 \tElements in batch (lc): %i
-                \tIs busy (lc): %r\n""" % (
+                \tIs busy (lc): %r
+                \tElements in batch (d): %i
+                \tIs busy (d): %r\n""" % (
                 i,
                 productionLine.GetInputBufferMachine().GetElementsInBuffer(),
                 productionLine.GetSputteringMachine().GetElementsInBatch(),
                 productionLine.GetSputteringMachine().IsBusy(),
                 productionLine.GetSputteringMachine().IsFull(),
                 productionLine.GetLacquerCoatingMachine().GetElementsInBatch(),
-                productionLine.GetLacquerCoatingMachine().IsBusy()
+                productionLine.GetLacquerCoatingMachine().IsBusy(),
+                productionLine.GetDryingMachine().GetElementsInBatch(),
+                productionLine.GetDryingMachine().IsBusy()
             )
 
             # Add string to output buffer

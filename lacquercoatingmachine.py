@@ -1,12 +1,37 @@
 from machine import Machine
 from event import Event
 
+import threading
+
 class LacquerCoatingFinishedEvent(Event):
     def __init__(self, productionLine):
         super(LacquerCoatingFinishedEvent, self).__init__('LacquerCoatingFinishedEvent', productionLine)
 
+    def PollNotBusy(self, time):
+        # TODO: At this point we should check the machines from other production lines
+        dryingMachine = self.productionLine.GetDryingMachine()
+        while dryingMachine.IsBusy():
+            pass
+
+        # The machine is not busy anymore, transfer the batch
+        dryingMachine.Touch(time)
+
+        # Set the sputtering machine to a non-busy state
+        # (we assume that the sputtering machine is busy)
+        lacquerCoatingMachine = self.productionLine.GetLacquerCoatingMachine()
+
+        assert lacquerCoatingMachine.IsBusy()
+
+        # Indicate that the machine is not busy
+        lacquerCoatingMachine.SetNonBusy()
+
+        # Indicate that the machine now is empty
+        lacquerCoatingMachine.SetEmpty()
+
     def Handle(self, time):
-        pass
+        # Start polling the drying machine for non-busy state
+        pollThread = threading.Thread(target=self.PollNotBusy, args=[time])
+        pollThread.start()
 
 class LacquerCoatingMachine(Machine):
     def __init__(self, productionLine):
@@ -71,6 +96,9 @@ class LacquerCoatingMachine(Machine):
         # TODO: We currently use 2000ms for scheduling a new LacquerCoatingFinishedEvent, this should be modelled
         # using some function
         t1 = time + 2000
+
+        # Indicate that the machine is busy
+        self.SetBusy()
 
         # Add the event
         self.productionLine.GetSimulation().AddEvent(t1, LacquerCoatingFinishedEvent(self.productionLine))
