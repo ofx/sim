@@ -6,7 +6,14 @@ class ConveryorBeltFinishedEvent(Event):
         super(ConveryorBeltFinishedEvent, self).__init__('ConveryorBeltFinishedEvent', productionLine)
 
     def Handle(self, time):
-        print 'Conveyor Belt finished'
+        # Fetch an instance of the input buffer "machine"
+        inputBufferMachine = self.productionLine.GetInputBufferMachine()
+
+        # Check if the input buffer is not full, if so we need to halt the production line up to the conveyor belt
+        if not inputBufferMachine.IsFull():
+            inputBufferMachine.Touch()
+        else:
+            self.productionLine.HaltProcessing()
 
 class ConveyorBelt(Machine):
     def __init__(self, productionLine):

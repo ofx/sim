@@ -5,6 +5,7 @@ from sputteringmachine import SputteringMachine
 from lacquercoatingmachine import LacquerCoatingMachine
 from dryingmachine import DryingMachine
 from printingmachine import PrintingMachine
+from inputbuffermachine import InputBufferMachine
 
 from event import Event
 
@@ -29,12 +30,19 @@ class ProductionLine:
         self.lacquerCoatingMachine    = LacquerCoatingMachine(self)
         self.dryingMachine            = DryingMachine(self)
         self.printingMachine          = PrintingMachine(self)
+        self.inputBufferMachine       = InputBufferMachine(self)
 
         # Store a reference to the simulation
         self.simulation = simulation
 
         # At launch, we're not halted
         self.isHalted = False
+
+    '''
+    Return a reference to the input buffer machine.
+    '''
+    def GetInputBufferMachine(self):
+        return self.inputBufferMachine
 
     '''
     Return the simulation instance.

@@ -1,3 +1,5 @@
+import threading
+
 from machine import Machine
 from event import Event
 
@@ -8,7 +10,11 @@ class InjectionMoldingFinishedEvent(Event):
         # Keep a reference to the machine that this event belongs to
         self.injectionMoldingMachine = injectionMoldingMachine
 
-    def Handle(self, time):
+    def PollUnhalt(self, time):
+        # Wait for unhalted production line
+        while self.productionLine.IsHalted():
+            pass
+
         # After handling the event, we trigger the next machine (dye coating)
         dyeCoatingMachine = self.productionLine.GetDyeCoatingMachine()
 
@@ -18,6 +24,10 @@ class InjectionMoldingFinishedEvent(Event):
         # Touch the injection molding machine that this event is belonging to to indicate that it's ready to schedule a new
         # event indicating that it's done
         self.injectionMoldingMachine.Touch(time)
+
+    def Handle(self, time):
+        pollThread = threading.Thread(target=self.PollUnhalt, args=[time])
+        pollThread.start()
 
 class InjectionMoldingMachine(Machine):
     batch = None
