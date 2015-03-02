@@ -21,6 +21,39 @@ class InputBufferMachine(Machine):
 
         return self.elementsInBuffer == self.bufferSize
 
+    def GetElementsInBuffer(self):
+        return self.elementsInBuffer
+
+    def IsEmpty(self):
+        # We can never undershoot
+        assert self.elementsInBuffer >= 0
+
+        return self.elementsInBuffer == 0
+
+    def Fetch(self):
+        # Assume that this check if already done
+        assert self.elementsInBuffer > 0
+
+        # Decrease the number of elements in the buffer
+        self.elementsInBuffer -= 1
+
+    def FetchAll(self):
+        # Assume that this check if already done
+        assert self.elementsInBuffer > 0
+
+        # Set the number of elements in buffer to 0
+        self.elementsInBuffer = 0
+
+    def Take(self, n):
+        # Assume that this check if already done
+        assert self.elementsInBuffer > 0
+
+        # Take n from the input buffer
+        self.elementsInBuffer
+
+        # If we have reached some < 0 value here, this means we have non-valid logic at some other point
+        assert self.elementsInBuffer >= 0
+
     def Touch(self, time):
         # We assume that this check has already been done, introducing this assert makes sure that
         # the caller is always properly calling this function
