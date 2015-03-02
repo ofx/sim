@@ -2,11 +2,22 @@ from machine import Machine
 from event import Event
 
 class InjectionMoldingFinishedEvent(Event):
-    def __init__(self):
-        super(InjectionMoldingFinishedEvent, self).__init__('InjectionMoldingFinishedEvent')
+    def __init__(self, productionLine, injectionMoldingMachine):
+        super(InjectionMoldingFinishedEvent, self).__init__('InjectionMoldingFinishedEvent', productionLine)
 
-    def Handle(self, productionLine):
-        print 'Handling'
+        # Keep a reference to the machine that this event belongs to
+        self.injectionMoldingMachine = injectionMoldingMachine
+
+    def Handle(self, time):
+        # After handling the event, we trigger the next machine (dye coating)
+        dyeCoatingMachine = self.productionLine.GetDyeCoatingMachine()
+
+        # Touch the dye coating machine to trigger event generation
+        dyeCoatingMachine.Touch(time)
+
+        # Touch the injection molding machine that this event is belonging to to indicate that it's ready to schedule a new
+        # event indicating that it's done
+        self.injectionMoldingMachine.Touch(time)
 
 class InjectionMoldingMachine(Machine):
     batch = None
@@ -24,4 +35,4 @@ class InjectionMoldingMachine(Machine):
         t1 = time + 2000
 
         # Add the event
-        self.productionLine.GetSimulation().AddEvent(t1, InjectionMoldingFinishedEvent())
+        self.productionLine.GetSimulation().AddEvent(t1, InjectionMoldingFinishedEvent(self.productionLine, self))

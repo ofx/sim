@@ -26,6 +26,10 @@ class Sim:
     Step through time.
     '''
     def Step(self):
+        # Check if we're out of events
+        if self.eventQueue.empty():
+            return False
+
         # Pop the next event from the event queue
         (time, event) = self.eventQueue.get()
 
@@ -33,7 +37,9 @@ class Sim:
         print '[%i] %s' % (time, event.name)
 
         # Handle the event, pass a reference to this production line instance
-        event.Handle(self)
+        event.Handle(time)
+
+        return True
 
     '''
     Start the simulation.
@@ -50,9 +56,7 @@ class Sim:
         # Run until we eventually run against an EmptyException triggered by the get-operation
         # on the priority queue, in which case we're done simulating
         try:
-            while True:
-                self.Step()
-
+            while self.Step():
                 # Sleep for a short while
                 sleep(0.1)
         except Empty:

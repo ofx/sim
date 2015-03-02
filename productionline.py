@@ -33,6 +33,9 @@ class ProductionLine:
         # Store a reference to the simulation
         self.simulation = simulation
 
+        # At launch, we're not halted
+        self.isHalted = False
+
     '''
     Return the simulation instance.
     '''
@@ -46,7 +49,7 @@ class ProductionLine:
         return self.injectionMoldingMachines
 
     '''
-    Return the avaialable dye coating machine.
+    Return the available dye coating machine.
     '''
     def GetDyeCoatingMachine(self):
         return self.dyeCoatingMachine
@@ -80,6 +83,29 @@ class ProductionLine:
     '''
     def GetPrintingMachine(self):
         return self.printingMachine
+
+    '''
+    Halt processing of the first three machines, injection molding, dye coating and
+    conveyor belt to allow the sputtering, lacquer coating and drying machines to finish.
+    '''
+    def HaltProcessing(self):
+        assert self.isHalted == False
+
+        self.isHalted = True
+
+    '''
+    Continue processing for the first three machines.
+    '''
+    def ContinueProcessing(self):
+        assert self.isHalted == True
+
+        self.isHalted = False
+
+    '''
+    Returns a flag indicating if this production line is currently halted.
+    '''
+    def IsHalted(self):
+        return self.isHalted
 
     '''
     Start up this production line.
