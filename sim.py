@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import os
+
 from Queue import PriorityQueue
 from Queue import Empty
 from time import sleep
@@ -18,6 +20,9 @@ class Sim:
 
         # Set time to 0
         self.time = 0
+
+        # Set last event to ''
+        self.event = ''
 
         # Set last output buffer size to 0
         self.lastOutputBufferSize = 0
@@ -45,6 +50,9 @@ class Sim:
         # Set last time
         self.time = time
 
+        # Set last event
+        self.event = event
+
         return True
 
     '''
@@ -57,8 +65,7 @@ class Sim:
 
     def PrintInfo(self):
         # Wipe the last information from the screen
-        #for i in range(0, self.lastOutputBufferSize):
-        #    print '\b'
+        os.system('clear')
 
         # Initialize empty output buffer
         outputBuffer = ''
@@ -70,6 +77,7 @@ class Sim:
         i = 1
         for productionLine in self.productionLines:
             s = """[%i]
+                \tEvent: %s
                 \tElements in buffer: %i
                 \tElements in batch (s): %i
                 \tIs busy (s): %r
@@ -79,6 +87,7 @@ class Sim:
                 \tElements in batch (d): %i
                 \tIs busy (d): %r\n""" % (
                 i,
+                self.event,
                 productionLine.GetInputBufferMachine().GetElementsInBuffer(),
                 productionLine.GetSputteringMachine().GetElementsInBatch(),
                 productionLine.GetSputteringMachine().IsBusy(),
@@ -88,6 +97,17 @@ class Sim:
                 productionLine.GetDryingMachine().GetElementsInBatch(),
                 productionLine.GetDryingMachine().IsBusy()
             )
+
+            # Display breakdown status of injection molding machines
+            n = 0
+            for injectionMoldingMachine in productionLine.GetInjectionMoldingMachines():
+                s += """\n\tInjection molding machine [%i]
+                     \tBreakdown: %r""" % (
+                    n,
+                    injectionMoldingMachine.IsBrokenDown()
+                )
+
+                n += 1
 
             # Add string to output buffer
             outputBuffer += s
@@ -111,8 +131,7 @@ class Sim:
                 # Print some information
                 self.PrintInfo()
 
-                # Sleep for a short while
-                sleep(0.1)
+                raw_input("Press enter to step...")
         except Empty:
             print 'Simulation ended'
 
