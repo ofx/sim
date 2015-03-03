@@ -57,9 +57,8 @@ class ConveyorBelt(Machine):
         super(ConveyorBelt, self).__init__(productionLine)
 
     def Touch(self, time):
-        # TODO: We currently use 2000ms for scheduling a new InjectionMoldingFinishedEvent, this should be modelled
-        # using some function
-        t1 = time + 2000
+        # every DVD spends 5 mins on the conveyor belt
+        t1 = time + 50000
 
         # Add the event
         self.productionLine.GetSimulation().AddEvent(t1, ConveryorBeltFinishedEvent(self.productionLine))
