@@ -134,3 +134,13 @@ class InjectionMoldingMachine(Machine):
         # do we want rounded ms?
         s = np.random.gamma(shape, scale, 1) * 1000
         return s
+
+    def TimeTillNextBreakdownOldMachine(self):
+        shape, scale = 1.058, 26331.62
+        s = np.random.gamma(shape, scale, 1) * 1000
+        return s
+
+    def TimeTillNextBreakdownNewMachine(self):
+        shape, scale = 49.794407, 72.523463
+        s = np.random.gamma(shape, scale, 1)
+        return s
