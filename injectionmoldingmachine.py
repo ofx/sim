@@ -3,6 +3,11 @@ import threading
 from machine import Machine
 from event import Event
 
+import numpy as np
+from scipy import optimize
+import scipy.special as sps
+import matplotlib.pyplot as plt
+
 class InjectionMoldingFinishedEvent(Event):
     def __init__(self, productionLine, injectionMoldingMachine):
         super(InjectionMoldingFinishedEvent, self).__init__('InjectionMoldingFinishedEvent', productionLine)
@@ -40,9 +45,29 @@ class InjectionMoldingMachine(Machine):
     into the production line's event queue.
     '''
     def Touch(self, time):
-        # TODO: We currently use 2000ms for scheduling a new InjectionMoldingFinishedEvent, this should be modelled
-        # using some function
-        t1 = time + 2000
 
+        t1 = time + self.Wait()
+        
         # Add the event
         self.productionLine.GetSimulation().AddEvent(t1, InjectionMoldingFinishedEvent(self.productionLine, self))
+
+    def Wait(self):
+
+        # this data is generated from R, on injection molding.
+        shape = 0.9968
+        scale = 60.1
+
+        # * 1000 for seconds -> ms
+        # do we want rounded ms?
+
+        s = np.random.gamma(shape, scale, 1) * 1000
+
+        return s
+        
+    # shows plot of distribution, set third param of np.random.gamma to higher number.    
+
+    #     count, bins, ignored = plt.hist(s, 50, normed=True)
+    #     y = bins**(shape-1)*(np.exp(-bins/scale) / (sps.gamma(shape)*scale**shape))
+    #     plt.plot(bins, y, linewidth=2, color='r')
+    #     plt.show()
+    # 
