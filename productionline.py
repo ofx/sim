@@ -25,12 +25,15 @@ class ProductionLine:
     1 input buffer
     1 output buffer
     '''
-    def __init__(self, simulation, configuration):
+    def __init__(self, simulation, configuration, productionLineNumber):
         # Store a reference to the configuration
         self.configuration = configuration
 
         # Store a reference to the simulation instance
         self.simulation = simulation
+
+        # Store the production line number
+        self.productionLineNumber = productionLineNumber
 
         # Initialize the machine instances
         self.injectionMoldingMachines = [InjectionMoldingMachine(self), InjectionMoldingMachine(self)]
@@ -48,6 +51,9 @@ class ProductionLine:
 
         # At start, the time is 0
         self.time = 0
+
+    def GetProductionLineNumber(self):
+        return self.productionLineNumber
 
     '''
     Get a reference to the simulation instance

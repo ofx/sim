@@ -9,3 +9,9 @@ class Event:
 
     @abstractmethod
     def Handle(self, time): pass
+
+    def GetEventString(self):
+        return '%s on production line number %i' % (self.name, self.productionLine.GetProductionLineNumber())
+
+    def GetProductionLine(self):
+        return self.productionLine

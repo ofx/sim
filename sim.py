@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
 import os
+import datetime
+import time
 
 from Queue import PriorityQueue
 from Queue import Empty
@@ -15,7 +17,7 @@ class Sim:
     Initialize the simulation by creating two production lines.
     '''
     def __init__(self, maxProduction, configuration):
-        self.productionLines = [ProductionLine(self, configuration), ProductionLine(self, configuration)]
+        self.productionLines = [ProductionLine(self, configuration, 1), ProductionLine(self, configuration, 2)]
 
         # Initialize a priority queue resembling our event queue
         self.eventQueue = PriorityQueue()
@@ -31,6 +33,9 @@ class Sim:
 
         # Set the maximum production
         self.maxProduction = maxProduction
+
+        # Store the historic schedule (which is empty at start)
+        self.schedule = []
 
     '''
     Push event onto event queue.
@@ -49,6 +54,9 @@ class Sim:
         # Pop the next event from the event queue
         (time, event) = self.eventQueue.get()
 
+        # Store the schedule
+        self.schedule.append('%i: %s' % (time, event.GetEventString()))
+
         # Handle the event, pass a reference to this production line instance
         event.Handle(time)
 
@@ -59,8 +67,7 @@ class Sim:
         self.event = event
 
         # Tell the production line the actual time
-        for productionLine in self.productionLines:
-            productionLine.SetTime(self.time)
+        event.GetProductionLine().SetTime(self.time)
 
         return True
 
@@ -148,6 +155,15 @@ class Sim:
 
         return totalDvdsProduced == self.maxProduction
 
+    def DumpSchedule(self):
+        ts = time.time()
+        st = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d_%H%M%S')
+
+        f = open('dump_%s' % st,'w')
+        for line in self.schedule:
+            f.write('%s\n' % line)
+        f.close()
+
     '''
     Run the simulation.
     '''
@@ -160,7 +176,7 @@ class Sim:
             if self.ShouldStop():
                 break
 
-            raw_input("Press enter to step...")
+            #raw_input("Press enter to step...")
 
         print 'Done in %i seconds' % self.time
 
@@ -176,3 +192,4 @@ if __name__ == "__main__":
     print 'Starting simulation...'
     simulation.Start()
     simulation.Run()
+    simulation.DumpSchedule()
