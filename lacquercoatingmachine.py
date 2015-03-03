@@ -45,7 +45,7 @@ class LacquerCoatingMachine(Machine):
 
         # Batch size (please not that this should be equal to every other batch size, it might be
         # more convenient to store this at some other place)
-        self.batchSize = 100
+        self.batchSize = self.productionLine.GetConfiguration().GetBatchSize()
 
         # At start we don't have elements in our batch
         self.elementsInBatch = 0

@@ -10,7 +10,7 @@ class InputBufferMachine(Machine):
         super(InputBufferMachine, self).__init__(productionLine)
 
         # Set the buffer size to 20
-        self.bufferSize = 20
+        self.bufferSize = self.productionLine.GetConfiguration().GetBufferSize()
 
         # Set the elements in buffer to 0
         self.elementsInBuffer = 0

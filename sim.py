@@ -4,7 +4,9 @@ import os
 
 from Queue import PriorityQueue
 from Queue import Empty
+
 from time import sleep
+from configuration import Configuration
 
 from productionline import ProductionLine
 
@@ -12,8 +14,8 @@ class Sim:
     '''
     Initialize the simulation by creating two production lines.
     '''
-    def __init__(self):
-        self.productionLines = [ProductionLine(self), ProductionLine(self)]
+    def __init__(self, maxProduction, configuration):
+        self.productionLines = [ProductionLine(self, configuration), ProductionLine(self, configuration)]
 
         # Initialize a priority queue resembling our event queue
         self.eventQueue = PriorityQueue()
@@ -26,6 +28,9 @@ class Sim:
 
         # Set last output buffer size to 0
         self.lastOutputBufferSize = 0
+
+        # Set the maximum production
+        self.maxProduction = maxProduction
 
     '''
     Push event onto event queue.
@@ -132,23 +137,41 @@ class Sim:
         # Last output buffer size
         self.lastOutputBufferSize = len(outputBuffer)
 
+    def ShouldStop(self):
+        totalDvdsProduced = 0
+
+        for productionLine in self.productionLines:
+            totalDvdsProduced += productionLine.GetPrintingMachine().GetDvdsProduced()
+
+        # We shouldn't overshoot
+        assert totalDvdsProduced <= self.maxProduction
+
+        return totalDvdsProduced == self.maxProduction
+
     '''
     Run the simulation.
     '''
     def Run(self):
-        # Run until we eventually run against an EmptyException triggered by the get-operation
-        # on the priority queue, in which case we're done simulating
-        try:
-            while self.Step():
-                # Print some information
-                self.PrintInfo()
+        while self.Step():
+            # Print some information
+            self.PrintInfo()
 
-                raw_input("Press enter to step...")
-        except Empty:
-            print 'Simulation ended'
+            # Check if we've reached max production
+            if self.ShouldStop():
+                break
+
+            raw_input("Press enter to step...")
+
+        print 'Done in %i seconds' % self.time
+
+        return self.time
 
 if __name__ == "__main__":
-    simulation = Sim()
+    endCondition = 2000
+
+    configuration = Configuration(20, 100)
+
+    simulation = Sim(endCondition, configuration)
 
     print 'Starting simulation...'
     simulation.Start()

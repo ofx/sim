@@ -7,6 +7,7 @@ from dryingmachine import DryingMachine
 from printingmachine import PrintingMachine
 from inputbuffermachine import InputBufferMachine
 from outputbuffermachine import OutputBufferMachine
+from configuration import Configuration
 
 from event import Event
 
@@ -21,8 +22,16 @@ class ProductionLine:
     1 lacquer coating machine
     1 drying machine
     1 printing machine
+    1 input buffer
+    1 output buffer
     '''
-    def __init__(self, simulation):
+    def __init__(self, simulation, configuration):
+        # Store a reference to the configuration
+        self.configuration = configuration
+
+        # Store a reference to the simulation instance
+        self.simulation = simulation
+
         # Initialize the machine instances
         self.injectionMoldingMachines = [InjectionMoldingMachine(self), InjectionMoldingMachine(self)]
         self.dyeCoatingMachine        = DyeCoatingMachine(self)
@@ -34,14 +43,23 @@ class ProductionLine:
         self.inputBufferMachine       = InputBufferMachine(self)
         self.outputBufferMachine      = OutputBufferMachine(self)
 
-        # Store a reference to the simulation
-        self.simulation = simulation
-
         # At launch, we're not halted
         self.isHalted = False
 
         # At start, the time is 0
         self.time = 0
+
+    '''
+    Get a reference to the simulation instance
+    '''
+    def GetSimulation(self):
+        return self.simulation
+
+    '''
+    Get the actual simulation configuration.
+    '''
+    def GetConfiguration(self):
+        return self.configuration
 
     '''
     Set the actual time.
@@ -66,12 +84,6 @@ class ProductionLine:
     '''
     def GetInputBufferMachine(self):
         return self.inputBufferMachine
-
-    '''
-    Return the simulation instance.
-    '''
-    def GetSimulation(self):
-        return self.simulation
 
     '''
     Return a set of available injection molding machines.

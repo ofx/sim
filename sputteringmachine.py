@@ -46,8 +46,8 @@ class SputteringMachine(Machine):
         # At start this machine is not busy
         self.isBusy = False
 
-        # TODO: This is set at 100, maybe we want to change this later on
-        self.batchSize = 100
+        # Fetch the batch size from the configuration
+        self.batchSize = self.productionLine.GetConfiguration().GetBatchSize()
 
     def SetEmpty(self):
         assert self.elementsInBatch > 0
