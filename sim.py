@@ -76,7 +76,7 @@ class Sim:
         # Add information for botch production lines
         i = 1
         for productionLine in self.productionLines:
-            s = """[%i]
+            s = """\n[%i]
                 \tEvent: %s
                 \tElements in buffer: %i
                 \tElements in batch (s): %i
