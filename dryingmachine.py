@@ -36,13 +36,29 @@ class DryingFinishedEvent(Event):
             while outputBufferMachine.GetPrintingMachine().IsBusy():
                 pass
 
-            print 'Touching printing machine'
-
             # Set the time to the actual time
             time = self.productionLine.GetTime()
 
             # Touch the printing machine that is associated with the output buffer
             outputBufferMachine.GetPrintingMachine().Touch(time)
+
+        # Empty the output buffer
+        elementsInOutputBuffer = outputBufferMachine.GetElementsInBuffer()
+
+        # Transfer every element
+        for i in range(0, elementsInOutputBuffer):
+            # Wait until the printing machine is finished
+            while outputBufferMachine.GetPrintingMachine().IsBusy():
+                pass
+
+            # Set the time to the actual time
+            time = self.productionLine.GetTime()
+
+            # Touch the printing machine
+            outputBufferMachine.GetPrintingMachine().Touch(time)
+
+        # Indicate that we're done drying
+        self.dryingMachine.SetNonBusy()
 
     def Handle(self, time):
         # Empty the drying machine

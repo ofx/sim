@@ -69,7 +69,7 @@ class Sim:
 
     def PrintInfo(self):
         # Wipe the last information from the screen
-        #os.system('clear')
+        os.system('clear')
 
         # Initialize empty output buffer
         outputBuffer = ''
