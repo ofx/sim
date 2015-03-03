@@ -13,6 +13,9 @@ class SputteringFinishedEvent(Event):
         while lacquerCoatingMachine.IsBusy():
             pass
 
+        # Set the time to the actual time
+        time = self.productionLine.GetTime()
+
         # The machine is not busy anymore, transfer the batch
         lacquerCoatingMachine.Touch(time)
 

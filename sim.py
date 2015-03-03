@@ -53,6 +53,10 @@ class Sim:
         # Set last event
         self.event = event
 
+        # Tell the production line the actual time
+        for productionLine in self.productionLines:
+            productionLine.SetTime(self.time)
+
         return True
 
     '''
@@ -65,7 +69,7 @@ class Sim:
 
     def PrintInfo(self):
         # Wipe the last information from the screen
-        os.system('clear')
+        #os.system('clear')
 
         # Initialize empty output buffer
         outputBuffer = ''
@@ -78,24 +82,32 @@ class Sim:
         for productionLine in self.productionLines:
             s = """\n[%i]
                 \tEvent: %s
-                \tElements in buffer: %i
-                \tElements in batch (s): %i
-                \tIs busy (s): %r
-                \tIs full (s): %r
-                \tElements in batch (lc): %i
-                \tIs busy (lc): %r
-                \tElements in batch (d): %i
-                \tIs busy (d): %r\n""" % (
+                \tElements in input buffer: %i
+                \tElements in output buffer: %i
+                \tElements in batch (sputtering): %i
+                \tIs busy (sputtering): %r
+                \tIs full (sputtering): %r
+                \tElements in batch (lacquer coating): %i
+                \tIs busy (lacquer coating): %r
+                \tElements in batch (drying): %i
+                \tIs busy (drying): %r
+                \tIs empty (drying): %r
+                \tIs busy (printing): %r
+                \tDVDs produced (printing): %i\n""" % (
                 i,
                 self.event,
                 productionLine.GetInputBufferMachine().GetElementsInBuffer(),
+                productionLine.GetOutputBufferMachine().GetElementsInBuffer(),
                 productionLine.GetSputteringMachine().GetElementsInBatch(),
                 productionLine.GetSputteringMachine().IsBusy(),
                 productionLine.GetSputteringMachine().IsFull(),
                 productionLine.GetLacquerCoatingMachine().GetElementsInBatch(),
                 productionLine.GetLacquerCoatingMachine().IsBusy(),
                 productionLine.GetDryingMachine().GetElementsInBatch(),
-                productionLine.GetDryingMachine().IsBusy()
+                productionLine.GetDryingMachine().IsBusy(),
+                productionLine.GetDryingMachine().IsEmpty(),
+                productionLine.GetPrintingMachine().IsBusy(),
+                productionLine.GetPrintingMachine().GetDvdsProduced()
             )
 
             # Display breakdown status of injection molding machines

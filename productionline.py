@@ -6,6 +6,7 @@ from lacquercoatingmachine import LacquerCoatingMachine
 from dryingmachine import DryingMachine
 from printingmachine import PrintingMachine
 from inputbuffermachine import InputBufferMachine
+from outputbuffermachine import OutputBufferMachine
 
 from event import Event
 
@@ -31,12 +32,34 @@ class ProductionLine:
         self.dryingMachine            = DryingMachine(self)
         self.printingMachine          = PrintingMachine(self)
         self.inputBufferMachine       = InputBufferMachine(self)
+        self.outputBufferMachine      = OutputBufferMachine(self)
 
         # Store a reference to the simulation
         self.simulation = simulation
 
         # At launch, we're not halted
         self.isHalted = False
+
+        # At start, the time is 0
+        self.time = 0
+
+    '''
+    Set the actual time.
+    '''
+    def SetTime(self, time):
+        self.time = time
+
+    '''
+    Get the actual time.
+    '''
+    def GetTime(self):
+        return self.time
+
+    '''
+    Return a reference to the output buffer machine.
+    '''
+    def GetOutputBufferMachine(self):
+        return self.outputBufferMachine
 
     '''
     Return a reference to the input buffer machine.

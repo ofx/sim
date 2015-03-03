@@ -23,12 +23,18 @@ class InjectionMoldingFinishedEvent(Event):
         # After handling the event, we trigger the next machine (dye coating)
         dyeCoatingMachine = self.productionLine.GetDyeCoatingMachine()
 
+        # Set the time to the actual time
+        time = self.productionLine.GetTime()
+
         # Touch the dye coating machine to trigger event generation
         dyeCoatingMachine.Touch(time)
 
         # Wait for non-broken down machine
         while self.injectionMoldingMachine.IsBrokenDown():
             pass
+
+        # Set the time to the actual time
+        time = self.productionLine.GetTime()
 
         # Touch the injection molding machine that this event is belonging to to indicate that it's ready to schedule a new
         # event indicating that it's done
