@@ -42,6 +42,7 @@ class InjectionMoldingFinishedEvent(Event):
 
     def Handle(self, time):
         pollThread = threading.Thread(target=self.PollUnhalt, args=[time])
+        pollThread.setDaemon(True)
         pollThread.start()
 
 class InjectionMoldingBreakdownEndEvent(Event):

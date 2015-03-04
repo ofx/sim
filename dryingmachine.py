@@ -63,6 +63,7 @@ class DryingFinishedEvent(Event):
     def Handle(self, time):
         # Empty the drying machine
         pollThread = threading.Thread(target=self.Empty, args=[time])
+        pollThread.setDaemon(True)
         pollThread.start()
 
 class DryingMachine(Machine):

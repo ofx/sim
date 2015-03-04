@@ -50,6 +50,7 @@ class ConveryorBeltFinishedEvent(Event):
 
             # Start polling the sputtering machine for non-busy state
             pollThread = threading.Thread(target=self.PollNotBusy, args=[time])
+            pollThread.setDaemon(True)
             pollThread.start()
 
 class ConveyorBelt(Machine):

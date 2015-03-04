@@ -34,6 +34,7 @@ class LacquerCoatingFinishedEvent(Event):
     def Handle(self, time):
         # Start polling the drying machine for non-busy state
         pollThread = threading.Thread(target=self.PollNotBusy, args=[time])
+        pollThread.setDaemon(True)
         pollThread.start()
 
 class LacquerCoatingMachine(Machine):

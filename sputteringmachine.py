@@ -34,6 +34,7 @@ class SputteringFinishedEvent(Event):
     def Handle(self, time):
         # Start polling the lacquer coating machine for non-busy state
         pollThread = threading.Thread(target=self.PollNotBusy, args=[time])
+        pollThread.setDaemon(True)
         pollThread.start()
 
 class SputteringMachine(Machine):
