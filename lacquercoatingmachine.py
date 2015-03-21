@@ -103,9 +103,10 @@ class LacquerCoatingMachine(Machine):
         # Accept the batch
         self.TransferBatch()
 
-        # TODO: We currently use 2000ms for scheduling a new LacquerCoatingFinishedEvent, this should be modelled
-        # using some function
-        t1 = time + 2000
+        batchSize = self.productionLine.GetConfiguration().GetBatchSize()
+        # sputtering takes 6 seconds per DVD, all DVD's need to be processed before we move on.
+        t1 = time + 6000 * batchSize
+        
 
         # Indicate that the machine is busy
         self.SetBusy()
