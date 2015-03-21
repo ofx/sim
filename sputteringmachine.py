@@ -102,9 +102,9 @@ class SputteringMachine(Machine):
         # We need to check if the batch is full, if so, we schedule a new event indicating that the sputtering
         # is done
         if self.IsFull():
-            # TODO: We currently use 2000ms for scheduling a new InjectionMoldingFinishedEvent, this should be modelled
-            # using some function
-            t1 = time + 2000
+            batchSize = self.productionLine.GetConfiguration().GetBatchSize()
+            # sputtering takes 10 seconds per DVD, all DVD's need to be processed before we move on.
+            t1 = time + 10000 * batchSize
 
             # Add the event
             self.productionLine.GetSimulation().AddEvent(t1, SputteringFinishedEvent(self.productionLine))

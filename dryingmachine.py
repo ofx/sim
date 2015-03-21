@@ -132,9 +132,8 @@ class DryingMachine(Machine):
         # Accept the batch
         self.TransferBatch()
 
-        # TODO: We currently use 2000ms for scheduling a new DryingFinishedEvent, this should be modelled
-        # using some function
-        t1 = time + 2000
+        # Drying takes 3 mins for the whole batch
+        t1 = time + 180000
 
         # Indicate that the machine is busy
         self.SetBusy()
