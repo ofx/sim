@@ -112,8 +112,8 @@ class SputteringMachine(Machine):
             # Indicate that this machine is busy
             self.SetBusy()
 
-        def MachineStuck(self,time):
-            # 3 % of the DVD's distrupt the machine.
-            if random.randint(0, 99) < 3:
-                return True
-            return False
+    def MachineStuck(self,time):
+        # 3 % of the DVD's distrupt the machine.
+        if random.randint(0, 99) < 3:
+            return True
+        return False
