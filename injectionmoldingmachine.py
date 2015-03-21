@@ -128,7 +128,7 @@ class InjectionMoldingMachine(Machine):
             self.scheduleBreakdown = False
 
     def Wait(self):
-        # this data is generated from R, on injection molding.
+        # gamma distribution (close to exponential, as shape = 1)
         shape = 0.9968
         scale = 60.1
         # * 1000 for seconds -> ms
@@ -137,11 +137,17 @@ class InjectionMoldingMachine(Machine):
         return s
 
     def TimeTillNextBreakdownOldMachine(self):
-        shape, scale = 1.058, 26331.62
-        s = np.random.gamma(shape, scale, 1) * 1000
+        # weibull distribution
+        shape,scale = 1.02, 482.6
+        s = np.random.weibull(shape)
+        # times 100 for mins -> sec, 1000 for s -> ms
+        s = s * scale * 100 * 1000
         return s
 
     def TimeTillNextBreakdownNewMachine(self):
-        shape, scale = 49.794407, 72.523463
-        s = np.random.gamma(shape, scale, 1)
+        #weibull distribution
+        shape, scale = 8.0067888,63.9084317
+        s = np.random.weibull(shape)
+        # times 100 for mins -> sec, 1000 for s -> ms
+        s = s * scale * 100 * 1000
         return s
