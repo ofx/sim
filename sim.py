@@ -3,6 +3,8 @@
 import os
 import datetime
 import time
+import random
+import numpy as np
 
 from Queue import PriorityQueue
 from Queue import Empty
@@ -36,6 +38,13 @@ class Sim:
 
         # Store the historic schedule (which is empty at start)
         self.schedule = []
+
+        # set the seed for the program.
+        np.random.seed(42)
+
+
+    def GetProductionLines(self):
+        return self.productionLines
 
     '''
     Push event onto event queue.
