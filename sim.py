@@ -194,7 +194,7 @@ class Sim:
 if __name__ == "__main__":
     endCondition = 2000
 
-    configuration = Configuration(20, 100)
+    configuration = Configuration(20, 10)
 
     simulation = Sim(endCondition, configuration)
 
