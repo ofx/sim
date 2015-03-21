@@ -6,5 +6,8 @@ class Machine:
     def __init__(self, productionLine):
         self.productionLine = productionLine
 
+    def GetProductionLine(self):
+        return self.productionLine
+
     @abstractmethod
     def Touch(self, time): pass

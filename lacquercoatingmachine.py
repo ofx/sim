@@ -8,28 +8,34 @@ class LacquerCoatingFinishedEvent(Event):
         super(LacquerCoatingFinishedEvent, self).__init__('LacquerCoatingFinishedEvent', productionLine)
 
     def PollNotBusy(self, time):
-        # TODO: At this point we should check the machines from other production lines
-        dryingMachine = self.productionLine.GetDryingMachine()
-        while dryingMachine.IsBusy():
-            pass
+        while True:
+            productionLines = self.GetProductionLine().GetSimulation().GetProductionLines()
+            productionLines.remove(self.GetProductionLine())
+            productionLines.insert(0, self.GetProductionLine())
+            for productionLine in productionLines:
+                dryingMachine = productionLine.GetDryingMachine()
+                if dryingMachine.IsBusy():
+                    continue
 
-        # Set the time to the actual time
-        time = self.productionLine.GetTime()
+                # Set the time to the actual time
+                time = productionLine.GetTime()
 
-        # The machine is not busy anymore, transfer the batch
-        dryingMachine.Touch(time)
+                # The machine is not busy anymore, transfer the batch
+                dryingMachine.Touch(time)
 
-        # Set the sputtering machine to a non-busy state
-        # (we assume that the sputtering machine is busy)
-        lacquerCoatingMachine = self.productionLine.GetLacquerCoatingMachine()
+                # Set the sputtering machine to a non-busy state
+                # (we assume that the sputtering machine is busy)
+                lacquerCoatingMachine = self.GetProductionLine().GetLacquerCoatingMachine()
 
-        assert lacquerCoatingMachine.IsBusy()
+                assert lacquerCoatingMachine.IsBusy()
 
-        # Indicate that the machine is not busy
-        lacquerCoatingMachine.SetNonBusy()
+                # Indicate that the machine is not busy
+                lacquerCoatingMachine.SetNonBusy()
 
-        # Indicate that the machine now is empty
-        lacquerCoatingMachine.SetEmpty()
+                # Indicate that the machine now is empty
+                lacquerCoatingMachine.SetEmpty()
+
+                return
 
     def Handle(self, time):
         # Start polling the drying machine for non-busy state

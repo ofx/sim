@@ -37,6 +37,9 @@ class Sim:
         # Store the historic schedule (which is empty at start)
         self.schedule = []
 
+    def GetProductionLines(self):
+        return self.productionLines
+
     '''
     Push event onto event queue.
     '''
@@ -178,7 +181,7 @@ class Sim:
 
             #raw_input("Press enter to step...")
 
-        print 'Done in %i seconds' % self.time
+        print 'Done in %i milliseconds' % self.time
 
         return self.time
 
