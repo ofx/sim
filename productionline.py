@@ -36,7 +36,7 @@ class ProductionLine:
         self.productionLineNumber = productionLineNumber
 
         # Initialize the machine instances
-        self.injectionMoldingMachines = [InjectionMoldingMachine(self), InjectionMoldingMachine(self)]
+        self.injectionMoldingMachines = [InjectionMoldingMachine(self, True), InjectionMoldingMachine(self, False)]
         self.dyeCoatingMachine        = DyeCoatingMachine(self, True)
         self.conveyorBelt             = ConveyorBelt(self)
         self.sputteringMachine        = SputteringMachine(self)
