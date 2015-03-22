@@ -61,7 +61,6 @@ class SputteringBreakdownStartEvent(Event):
         # Indicate that the machine is broken down
         self.sputteringBreakdownEndEvent.SetBrokenDown()
 
-        # TODO: Add some function here to model time
         t2 = time + 300000
 
         # Schedule a new breakdown end event
@@ -141,9 +140,7 @@ class SputteringMachine(Machine):
 
         # Take a number of elements from the input buffer
         inputBufferMachine.Take(elementsToTake)
-
-        print 'IS IT HALTED', self.productionLine.IsHalted()
-
+        
         # check if prod line was halted, if so, unhalt
         if self.productionLine.IsHalted():
             self.productionLine.ContinueProcessing()
@@ -167,5 +164,6 @@ class SputteringMachine(Machine):
     def MachineStuck(self,time):
         # 3 % of the DVD's distrupt the machine.
         if random.randint(0, 99) < 3:
-            return True
-        return False
+            t3 = time + 300000
+            self.productionLine.GetSimulation().AddEvent(t3, SputteringBreakdownStartEvent(self.productionLine))
+        
