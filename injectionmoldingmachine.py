@@ -145,9 +145,16 @@ class InjectionMoldingMachine(Machine):
         return s
 
     def TimeTillNextBreakdownNewMachine(self):
-        #weibull distribution
-        shape, scale = 8.0067888,63.9084317
-        s = np.random.weibull(shape)
-        # times 100 for mins -> sec, 1000 for s -> ms
-        s = s * scale * 100 * 1000
+        #weibull distribution, but normal distribution now activated, still in doubt
+        # shape, scale = 8.0067888,63.9084317
+        # s = np.random.weibull(shape)
+        # # times 100 for mins -> sec, 1000 for s -> ms
+        # s = s * scale * 100 * 1000
+        # return s
+
+        # normal distribution
+        mu,sigma = 60.1877143, 8.4852158
+        s = random.normalvariate(mu, sigma)
+        # # times 100 for mins -> sec, 1000 for s -> ms
+        s = s * 100 * 1000
         return s
