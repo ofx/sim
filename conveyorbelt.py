@@ -25,7 +25,7 @@ class ConveryorBeltFinishedEvent(Event):
     def Handle(self, time):
         # Fetch an instance of the input buffer "machine"
         inputBufferMachine = self.productionLine.GetInputBufferMachine()
-
+        
         # Check if the input buffer is not full, if so we need to halt the production line up to the conveyor belt
         if not inputBufferMachine.IsFull():
             '''
@@ -49,7 +49,8 @@ class ConveryorBeltFinishedEvent(Event):
             we can continue processing, we touch the sputtering machine, so that the machine can fetch everything
             from the input buffer. We wait until the machine is ready full again, such that this will repeat.
             '''
-            self.productionLine.HaltProcessing()
+            if not self.productionLine.isHalted:
+                self.productionLine.HaltProcessing()
 
             # Start polling the sputtering machine for non-busy state
             pollThread = threading.Thread(target=self.PollNotBusy, args=[time])
