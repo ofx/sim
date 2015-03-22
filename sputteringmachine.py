@@ -37,6 +37,33 @@ class SputteringFinishedEvent(Event):
         pollThread.setDaemon(True)
         pollThread.start()
 
+class SputteringBreakdownEndEvent(Event):
+    def __init__(self, productionLine, sputteringBreakdownEndEvent):
+        super(SputteringBreakdownEndEvent, self).__init__('SputteringBreakdownEndEvent', productionLine)
+
+        # Keep a reference to the machine that this event belongs to
+        self.sputteringBreakdownEndEvent = sputteringBreakdownEndEvent
+
+    def Handle(self, time):
+        # Indicate that the machine is not broken down
+        self.sputteringBreakdownEndEvent.SetNonBrokenDown()
+
+class SputteringBreakdownStartEvent(Event):
+    def __init__(self, productionLine, sputteringBreakdownEndEvent):
+        super(SputteringBreakdownStartEvent, self).__init__('SputteringBreakdownStartEvent', productionLine)
+
+        # Keep a reference to the machine that this event belongs to
+        self.sputteringBreakdownEndEvent = sputteringBreakdownEndEvent
+
+    def Handle(self, time):
+        # Indicate that the machine is broken down
+        self.sputteringBreakdownEndEvent.SetBrokenDown()
+
+        t2 = time + 300000
+
+        # Schedule a new breakdown end event
+        self.productionLine.GetSimulation().AddEvent(t2, InjectionMoldingBreakdownEndEvent(self.productionLine, self.injectionMoldingMachine))
+
 class SputteringMachine(Machine):
     def __init__(self, productionLine):
         super(SputteringMachine, self).__init__(productionLine)
@@ -115,5 +142,5 @@ class SputteringMachine(Machine):
     def MachineStuck(self,time):
         # 3 % of the DVD's distrupt the machine.
         if random.randint(0, 99) < 3:
-            return True
-        return False
+            t3 = time + 300000
+            self.productionLine.GetSimulation().AddEvent(t3, SputteringBreakdownStartEvent(self.productionLine))
