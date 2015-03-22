@@ -62,7 +62,7 @@ class SputteringBreakdownStartEvent(Event):
         self.sputteringBreakdownEndEvent.SetBrokenDown()
 
         # TODO: Add some function here to model time
-        t2 = time + 300000
+        t2 = 300000
 
         # Schedule a new breakdown end event
         self.productionLine.GetSimulation().AddEvent(t2, InjectionMoldingBreakdownEndEvent(self.productionLine, self.injectionMoldingMachine))
@@ -150,7 +150,7 @@ class SputteringMachine(Machine):
         if self.IsFull():
             batchSize = self.productionLine.GetConfiguration().GetBatchSize()
             # sputtering takes 10 seconds per DVD, all DVD's need to be processed before we move on.
-            t1 = time + 10000 * batchSize
+            t1 = 10000 * batchSize
 
             # Add the event
             self.productionLine.GetSimulation().AddEvent(t1, SputteringFinishedEvent(self.productionLine))

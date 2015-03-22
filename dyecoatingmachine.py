@@ -48,7 +48,7 @@ class DyeCoatingMachine(Machine):
         return self.old
 
     def Touch(self, time):
-        t1 = time + self.Wait()
+        t1 = self.Wait()
         # Add the event
         self.productionLine.GetSimulation().AddEvent(t1, DyeCoatingFinishedEvent(self.productionLine, self))
 

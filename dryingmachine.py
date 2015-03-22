@@ -133,7 +133,7 @@ class DryingMachine(Machine):
         self.TransferBatch()
 
         # Drying takes 3 mins for the whole batch
-        t1 = time + 180000
+        t1 = 180000
 
         # Indicate that the machine is busy
         self.SetBusy()

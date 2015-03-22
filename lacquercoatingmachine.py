@@ -98,7 +98,7 @@ class LacquerCoatingMachine(Machine):
 
         batchSize = self.productionLine.GetConfiguration().GetBatchSize()
         # sputtering takes 6 seconds per DVD, all DVD's need to be processed before we move on.
-        t1 = time + 6000 * batchSize
+        t1 = 6000 * batchSize
 
 
         # Indicate that the machine is busy

@@ -71,7 +71,7 @@ class InjectionMoldingBreakdownStartEvent(Event):
         self.injectionMoldingMachine.SetBrokenDown()
 
         # TODO: Add some function here to model time
-        t2 = time + 8000
+        t2 = 8000
 
         # Schedule a new breakdown end event
         self.productionLine.GetSimulation().AddEvent(t2, InjectionMoldingBreakdownEndEvent(self.productionLine, self.injectionMoldingMachine))
@@ -112,14 +112,14 @@ class InjectionMoldingMachine(Machine):
     into the production line's event queue.
     '''
     def Touch(self, time):
-        t1 = time + self.Wait()
+        t1 = self.Wait()
 
         # Add the event
         self.productionLine.GetSimulation().AddEvent(t1, InjectionMoldingFinishedEvent(self.productionLine, self))
 
         # Only schedule a breakdown if the scheduleBreakdown flag indicates to do so
         if self.scheduleBreakdown:
-            t2 = time + 160000
+            t2 = 160000
 
             # Add a breakdown event
             self.productionLine.GetSimulation().AddEvent(t2, InjectionMoldingBreakdownStartEvent(self.productionLine, self))
