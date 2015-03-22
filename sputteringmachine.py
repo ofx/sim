@@ -141,6 +141,12 @@ class SputteringMachine(Machine):
         # Take a number of elements from the input buffer
         inputBufferMachine.Take(elementsToTake)
 
+        print 'IS IT HALTED', self.productionLine.IsHalted()
+
+        # check if prod line was halted, if so, unhalt
+        if self.productionLine.IsHalted():
+            self.productionLine.ContinueProcessing()
+
         # Add the elements from the input buffer to the batch
         self.elementsInBatch += elementsToAdd
 
