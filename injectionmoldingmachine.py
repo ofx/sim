@@ -3,7 +3,6 @@ import threading
 from machine import Machine
 from event import Event
 
-import random
 import numpy as np
 from scipy import optimize
 import scipy.special as sps
@@ -71,23 +70,21 @@ class InjectionMoldingBreakdownStartEvent(Event):
         # Indicate that the machine is broken down
         self.injectionMoldingMachine.SetBrokenDown()
 
-        # repair time
-        if self.injectionMoldingMachine.isOld:
-            t2 = self.injectionMoldingMachine.TimeTillRepairOldMachine()
-        t2 = self.injectionMoldingMachine.TimeTillRepairNewMachine()  
-        
+        # TODO: Add some function here to model time
+        t2 = time + 8000
+
         # Schedule a new breakdown end event
         self.productionLine.GetSimulation().AddEvent(t2, InjectionMoldingBreakdownEndEvent(self.productionLine, self.injectionMoldingMachine))
 
 class InjectionMoldingMachine(Machine):
     batch = None
-    
-    def __init__(self, productionLine, isOld):
+
+    def __init__(self, productionLine):
         super(InjectionMoldingMachine, self).__init__(productionLine)
 
         # At start we want to schedule a breakdown
         self.scheduleBreakdown = True
-        self.isOld = isOld
+
         # At start we're not broken down
         self.brokenDown = False
 
@@ -110,9 +107,6 @@ class InjectionMoldingMachine(Machine):
     def IsBrokenDown(self):
         return self.brokenDown
 
-
-
-
     '''
     Touch this machine, which for the injection molding machine means pushing an InjectionMoldingFinishedEvent
     into the production line's event queue.
@@ -125,10 +119,7 @@ class InjectionMoldingMachine(Machine):
 
         # Only schedule a breakdown if the scheduleBreakdown flag indicates to do so
         if self.scheduleBreakdown:
-
-            if self.isOld:
-                t2 = self.TimeTillNextBreakdownOldMachine()
-            t2 = self.TimeTillNextBreakdownNewMachine()
+            t2 = time + 160000
 
             # Add a breakdown event
             self.productionLine.GetSimulation().AddEvent(t2, InjectionMoldingBreakdownStartEvent(self.productionLine, self))
@@ -165,19 +156,5 @@ class InjectionMoldingMachine(Machine):
         mu,sigma = 60.1877143, 8.4852158
         s = random.normalvariate(mu, sigma)
         # # times 100 for mins -> sec, 1000 for s -> ms
-        s = s * 100 * 1000
-        return s
-
-    def TimeTillRepairOldMachine(self):
-        mu, sigma = 916.828507, 200
-        s = random.normalvariate(mu, sigma)
-        # times 100 for mins -> sec, 1000 for s -> ms
-        s = s * 100 * 1000
-        return s
-
-    def TimeTillRepairNewMachine(self):
-        shape, scale = 1.06432092, 115.52050746 
-        s = np.random.gamma(shape, scale, 1)
-        # times 100 for mins -> sec, 1000 for s -> ms
         s = s * 100 * 1000
         return s
