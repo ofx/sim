@@ -37,7 +37,7 @@ class ProductionLine:
 
         # Initialize the machine instances
         self.injectionMoldingMachines = [InjectionMoldingMachine(self), InjectionMoldingMachine(self)]
-        self.dyeCoatingMachine        = DyeCoatingMachine(self)
+        self.dyeCoatingMachine        = DyeCoatingMachine(self, True)
         self.conveyorBelt             = ConveyorBelt(self)
         self.sputteringMachine        = SputteringMachine(self)
         self.lacquerCoatingMachine    = LacquerCoatingMachine(self)
