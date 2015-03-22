@@ -72,9 +72,9 @@ class InjectionMoldingBreakdownStartEvent(Event):
         self.injectionMoldingMachine.SetBrokenDown()
 
         # repair time
-        if self.isOld:
-            t2 = self.TimeTillRepairOldMachine()
-        t2 = self.TimeTillRepairNewMachine()  
+        if self.injectionMoldingMachine.isOld:
+            t2 = self.injectionMoldingMachine.TimeTillRepairOldMachine()
+        t2 = self.injectionMoldingMachine.TimeTillRepairNewMachine()  
         
         # Schedule a new breakdown end event
         self.productionLine.GetSimulation().AddEvent(t2, InjectionMoldingBreakdownEndEvent(self.productionLine, self.injectionMoldingMachine))
@@ -168,14 +168,14 @@ class InjectionMoldingMachine(Machine):
         s = s * 100 * 1000
         return s
 
-    def TimeTillRepairOldMachine():
+    def TimeTillRepairOldMachine(self):
         mu, sigma = 916.828507, 200
         s = random.normalvariate(mu, sigma)
         # times 100 for mins -> sec, 1000 for s -> ms
         s = s * 100 * 1000
         return s
 
-    def TimeTillRepairNewMachine():
+    def TimeTillRepairNewMachine(self):
         shape, scale = 1.06432092, 115.52050746 
         s = np.random.gamma(shape, scale, 1)
         # times 100 for mins -> sec, 1000 for s -> ms
