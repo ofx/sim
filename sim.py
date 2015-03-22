@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 import os
 import datetime
@@ -179,7 +179,7 @@ class Sim:
     def Run(self):
         while self.Step():
             # Print some information
-            self.PrintInfo()
+            #self.PrintInfo()
 
             # Check if we've reached max production
             if self.ShouldStop():
