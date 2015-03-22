@@ -58,7 +58,7 @@ class PrintingMachine(Machine):
         assert not self.IsBusy()
 
         # Determine end time for event
-        t1 = self.Wait()
+        t1 = time + self.Wait()
 
         # Just a check that should always hold here
         assert self.productionLine.GetOutputBufferMachine().GetPrintingMachine() == self

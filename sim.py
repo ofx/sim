@@ -49,10 +49,8 @@ class Sim:
     '''
     Push event onto event queue.
     '''
-    def AddEvent(self, t, event):
-        t += self.time
-
-        self.eventQueue.put((t, event))
+    def AddEvent(self, time, event):
+        self.eventQueue.put((time, event))
 
     '''
     Step through time.
@@ -92,7 +90,7 @@ class Sim:
 
     def PrintInfo(self):
         # Wipe the last information from the screen
-        #os.system('clear')
+        os.system('clear')
 
         # Initialize empty output buffer
         outputBuffer = ''

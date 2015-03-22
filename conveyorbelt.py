@@ -16,9 +16,6 @@ class ConveryorBeltFinishedEvent(Event):
         # Sputtering machine is not busy anymore, unhalt processing and...
         self.productionLine.ContinueProcessing()
 
-        # Set the time to the actual time
-        time = self.productionLine.GetTime()
-
         # Touch the sputtering machine
         self.productionLine.GetSputteringMachine().Touch(time)
 
@@ -62,7 +59,7 @@ class ConveyorBelt(Machine):
 
     def Touch(self, time):
         # every DVD spends 5 mins on the conveyor belt
-        t1 = 300000
+        t1 = time + 50000
 
         # Add the event
         self.productionLine.GetSimulation().AddEvent(t1, ConveryorBeltFinishedEvent(self.productionLine))
