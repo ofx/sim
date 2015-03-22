@@ -73,9 +73,9 @@ class PrintingMachine(Machine):
         self.productionLine.GetSimulation().AddEvent(t1, PrintingFinishedEvent(self.productionLine, self))
 
     def Wait(self):
-    	# this data is generated from R
-    	mu = 24.81055
-    	sigma = 2.867319
-    	# compute the random variable with a normal distribution
-    	s = random.normalvariate(mu, sigma)
+        # this data is generated from R
+        mu = 24.81055
+        sigma = 2.867319
+        # compute the random variable with a normal distribution
+        s = random.normalvariate(mu, sigma)
         return s
