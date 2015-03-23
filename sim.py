@@ -93,7 +93,7 @@ class Sim:
 
     def PrintInfo(self):
         # Wipe the last information from the screen
-        #os.system('clear')
+        os.system('clear')
 
         # Initialize empty output buffer
         outputBuffer = ''
@@ -182,7 +182,7 @@ class Sim:
     def Run(self):
         while self.Step():
             # Print some information
-            self.PrintInfo()
+            #self.PrintInfo()
 
             #for productionLine in self.productionLines:
             #    print productionLine.IsHalted()
@@ -210,7 +210,8 @@ if __name__ == "__main__":
 
     injectionMoldingMachineOneOld = sys.argv[3] in ['Yes', 'True', 'yes', 'true', 'y']
     injectionMoldingMachineTwoOld = sys.argv[4] in ['Yes', 'True', 'yes', 'true', 'y']
-    configuration = Configuration(int(sys.argv[2]), int(sys.argv[2]), injectionMoldingMachineOneOld, injectionMoldingMachineTwoOld)
+    dyeCoatingMachineOld = sys.argv[5] in ['Yes', 'True', 'yes', 'true', 'y']
+    configuration = Configuration(int(sys.argv[2]), int(sys.argv[2]), injectionMoldingMachineOneOld, injectionMoldingMachineTwoOld, dyeCoatingMachineOld)
 
     simulation = Sim(endCondition, configuration)
 

@@ -36,8 +36,13 @@ class ProductionLine:
         self.productionLineNumber = productionLineNumber
 
         # Initialize the machine instances
+        if self.productionLineNumber == 1:
+            dyeCoatingMachineOld = True
+        else:
+            dyeCoatingMachineOld = self.configuration.GetDyeCoatingMachineOld()
+
         self.injectionMoldingMachines = [InjectionMoldingMachine(self, self.configuration.GetInjectionMoldingMachineOneOld()), InjectionMoldingMachine(self, self.configuration.GetInjectionMoldingMachineOneOld())]
-        self.dyeCoatingMachine        = DyeCoatingMachine(self, True)
+        self.dyeCoatingMachine        = DyeCoatingMachine(self, dyeCoatingMachineOld)
         self.conveyorBelt             = ConveyorBelt(self)
         self.sputteringMachine        = SputteringMachine(self)
         self.lacquerCoatingMachine    = LacquerCoatingMachine(self)

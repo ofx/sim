@@ -1,4 +1,4 @@
-for i in `seq 1 100`;
+for i in `seq 5 100`;
 do
-	./sim.py "1000" "$i"
+	./sim.py 1000 "$i" True False False
 done
