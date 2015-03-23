@@ -22,8 +22,36 @@ class PrintingFinishedEvent(Event):
         # We're done, we've created a DVD
         self.printingMachine.IncrementDvdsProduced()
 
+class PrintingBreakdownEndEvent(Event):
+    def __init__(self, productionLine, printingBreakdownEndEvent):
+        super(PrintingBreakdownEndEvent, self).__init__('PrintingBreakdownEndEvent', productionLine)
+
+        # Keep a reference to the machine that this event belongs to
+        self.printingBreakdownEndEvent = printingBreakdownEndEvent
+
+    def Handle(self, time):
+        # Indicate that the machine is not broken down
+        self.printingBreakdownEndEvent.SetNonBrokenDown()
+
+class PrintingBreakdownStartEvent(Event):
+    def __init__(self, productionLine, printingMachine):
+        super(PrintingBreakdownStartEvent, self).__init__('PrintingBreakdownStartEvent', productionLine)
+
+        # Keep a reference to the machine that this event belongs to
+        self.printingMachine = printingMachine
+
+    def Handle(self, time):
+        # Indicate that the machine is broken down
+        self.printingMachine.SetBrokenDown()
+
+        t2 = time + self.printingMachine.InkRefillTime()
+
+        # Schedule a new breakdown end event
+        self.productionLine.GetSimulation().AddEvent(t2, PrintingBreakdownEndEvent(self.productionLine, self.printingMachine))
+
 class PrintingMachine(Machine):
     batch = None
+    
 
     def __init__(self, productionLine):
         super(PrintingMachine, self).__init__(productionLine)
@@ -40,6 +68,19 @@ class PrintingMachine(Machine):
     def IncrementDvdsProduced(self):
         self.dvdsProduced += 1
 
+    def SetBrokenDown(self):
+        #assert not self.brokenDown
+
+        self.brokenDown = True
+
+    def SetNonBrokenDown(self):
+        #assert self.brokenDown
+
+        self.brokenDown = False
+
+    def IsBrokenDown(self):
+        return self.brokenDown
+
     def SetNonBusy(self):
         assert self.isBusy
 
@@ -54,6 +95,10 @@ class PrintingMachine(Machine):
         return self.isBusy
 
     def Touch(self, time):
+
+        # schedule breakdown every 200 DVDs
+        if self.dvdsProduced % 200 == 0 and self.dvdsProduced > 0:
+              self.productionLine.GetSimulation().AddEvent(time, PrintingBreakdownStartEvent(self.productionLine, self))
         # Assume that we're not busy, in case we are, we have some error elsewhere
         assert not self.IsBusy()
 
@@ -78,5 +123,11 @@ class PrintingMachine(Machine):
         sigma = 2.867319
         # compute the random variable with a normal distribution
         s = random.normalvariate(mu, sigma)
+        s = s * 1000
+        return s
+
+    def InkRefillTime(self):
+        mu,sigma = 15.001,1.05297
+        s = random.normalvariate(mu,sigma)
         s = s * 1000
         return s
