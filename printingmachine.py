@@ -78,4 +78,5 @@ class PrintingMachine(Machine):
         sigma = 2.867319
         # compute the random variable with a normal distribution
         s = random.normalvariate(mu, sigma)
+        s = s * 1000
         return s
