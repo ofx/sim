@@ -24,13 +24,13 @@ class OutputBufferMachine(Machine):
 
     def IsFull(self):
         # We can never overshoot
-        assert self.elementsInBuffer < self.bufferSize + 1
+        #assert self.elementsInBuffer < self.bufferSize + 1
 
         return self.elementsInBuffer == self.bufferSize
 
     def GetSpaceLeft(self):
         # This check should not fail
-        assert not self.IsFull()
+        #assert not self.IsFull()
 
         return self.bufferSize - self.elementsInBuffer
 
@@ -39,48 +39,48 @@ class OutputBufferMachine(Machine):
 
     def IsEmpty(self):
         # We can never undershoot
-        assert self.elementsInBuffer >= 0
+        #assert self.elementsInBuffer >= 0
 
         return self.elementsInBuffer == 0
 
     def Fetch(self):
         # Assume that this check if already done
-        assert self.elementsInBuffer > 0
+        #assert self.elementsInBuffer > 0
 
         # Decrease the number of elements in the buffer
         self.elementsInBuffer -= 1
 
     def FetchAll(self):
         # Assume that this check if already done
-        assert self.elementsInBuffer > 0
+        #assert self.elementsInBuffer > 0
 
         # Set the number of elements in buffer to 0
         self.elementsInBuffer = 0
 
     def Take(self, n):
         # Assume that this check if already done
-        assert self.elementsInBuffer > 0
+        #assert self.elementsInBuffer > 0
 
         # Take n from the output buffer
         self.elementsInBuffer -= n
 
         # If we have reached some < 0 value here, this means we have non-valid logic at some other point
-        assert self.elementsInBuffer >= 0
+        #assert self.elementsInBuffer >= 0
 
     def TakeOne(self):
         # Assume that this check if already done
-        assert self.elementsInBuffer > 0
+        #assert self.elementsInBuffer > 0
 
         # Take n from the output buffer
         self.elementsInBuffer -= 1
 
         # If we have reached some < 0 value here, this means we have non-valid logic at some other point
-        assert self.elementsInBuffer >= 0
+        #assert self.elementsInBuffer >= 0
 
     def Touch(self, time):
         # We assume that this check has already been done, introducing this assert makes sure that
         # the caller is always properly calling this function
-        assert not self.IsFull()
+        #assert not self.IsFull()
 
         # Increase the elements in buffer by 1
         self.elementsInBuffer += 1

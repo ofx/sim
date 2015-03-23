@@ -4,6 +4,7 @@ import os
 import datetime
 import time
 import random
+import sys
 import numpy as np
 
 from Queue import PriorityQueue
@@ -20,6 +21,8 @@ class Sim:
     '''
     def __init__(self, maxProduction, configuration):
         self.productionLines = [ProductionLine(self, configuration, 1), ProductionLine(self, configuration, 2)]
+
+        self.configuration = configuration
 
         # Initialize a priority queue resembling our event queue
         self.eventQueue = PriorityQueue()
@@ -190,18 +193,25 @@ class Sim:
 
             #raw_input("Press enter to step...")
 
+        print 'Buffer size: %i' % self.configuration.GetBufferSize()
+        print 'Batch size: %i' % self.configuration.GetBatchSize()
         print 'Done in %i milliseconds' % self.time
+        print 'Production: %i' % self.maxProduction
+        #print 'Production per hour: %f' % (self.maxProduction / (self.time / 3600000))
+
+        f = open('log', 'aw')
+        f.write("%i,%i\n" % (self.configuration.GetBatchSize(), self.time))
+        f.close()
 
         return self.time
 
 if __name__ == "__main__":
-    endCondition = 2000
+    endCondition = int(sys.argv[1])
 
-    configuration = Configuration(20, 100)
+    configuration = Configuration(int(sys.argv[2]), int(sys.argv[2]))
 
     simulation = Sim(endCondition, configuration)
 
     print 'Starting simulation...'
     simulation.Start()
     simulation.Run()
-    simulation.DumpSchedule()
