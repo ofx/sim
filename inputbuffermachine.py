@@ -32,7 +32,10 @@ class InputBufferMachine(Machine):
 
     def Fetch(self):
         # Assume that this check if already done
-        assert self.elementsInBuffer > 0
+        #assert self.elementsInBuffer > 0
+
+        if self.elementsInBuffer == 0:
+            return
 
         # Decrease the number of elements in the buffer
         self.elementsInBuffer -= 1
@@ -46,7 +49,10 @@ class InputBufferMachine(Machine):
 
     def Take(self, n):
         # Assume that this check if already done
-        assert self.elementsInBuffer > 0
+        #assert self.elementsInBuffer > 0
+
+        if self.elementsInBuffer == 0:
+            return
 
         # Take n from the input buffer
         self.elementsInBuffer -= n
