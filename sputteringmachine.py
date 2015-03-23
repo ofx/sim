@@ -2,6 +2,7 @@ from machine import Machine
 from event import Event
 
 import threading
+import random
 
 class SputteringFinishedEvent(Event):
     def __init__(self, productionLine):
@@ -51,20 +52,20 @@ class SputteringBreakdownEndEvent(Event):
         self.sputteringBreakdownEndEvent.SetNonBrokenDown()
 
 class SputteringBreakdownStartEvent(Event):
-    def __init__(self, productionLine, sputteringBreakdownEndEvent):
+    def __init__(self, productionLine, sputteringMachine):
         super(SputteringBreakdownStartEvent, self).__init__('SputteringBreakdownStartEvent', productionLine)
 
         # Keep a reference to the machine that this event belongs to
-        self.sputteringBreakdownEndEvent = sputteringBreakdownEndEvent
+        self.sputteringMachine = sputteringMachine
 
     def Handle(self, time):
         # Indicate that the machine is broken down
-        self.sputteringBreakdownEndEvent.SetBrokenDown()
+        self.sputteringMachine.SetBrokenDown()
 
         t2 = time + 300000
 
         # Schedule a new breakdown end event
-        self.productionLine.GetSimulation().AddEvent(t2, InjectionMoldingBreakdownEndEvent(self.productionLine, self.injectionMoldingMachine))
+        self.productionLine.GetSimulation().AddEvent(t2, SputteringBreakdownEndEvent(self.productionLine, self.sputteringMachine))
 
 class SputteringMachine(Machine):
     def __init__(self, productionLine):
@@ -156,6 +157,10 @@ class SputteringMachine(Machine):
             # sputtering takes 10 seconds per DVD, all DVD's need to be processed before we move on.
             t1 = time + 10000 * batchSize
 
+            # Loop through all DVDs to see if they halt the machine
+            for i in range(batchSize):
+                self.MachineStuck(time)
+
             # Add the event
             self.productionLine.GetSimulation().AddEvent(t1, SputteringFinishedEvent(self.productionLine))
 
@@ -167,5 +172,6 @@ class SputteringMachine(Machine):
     def MachineStuck(self,time):
         # 3 % of the DVD's distrupt the machine.
         if random.randint(0, 99) < 3:
-            t3 = time + 300000
-            self.productionLine.GetSimulation().AddEvent(t3, SputteringBreakdownStartEvent(self.productionLine))
+            # DVD halts the machine immediatly
+            t3 = time
+            self.productionLine.GetSimulation().AddEvent(t3, SputteringBreakdownStartEvent(self.productionLine, self))
