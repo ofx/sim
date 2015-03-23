@@ -9,7 +9,11 @@ class LacquerCoatingFinishedEvent(Event):
 
     def PollNotBusy(self, time):
         dryingMachine = self.productionLine.GetDryingMachine()
+        it = 0
         while dryingMachine.IsBusy():
+            if it >= 10000000:
+                return
+            it += 1
             pass
 
         # Set the time to the actual time
@@ -33,7 +37,6 @@ class LacquerCoatingFinishedEvent(Event):
     def Handle(self, time):
         # Start polling the drying machine for non-busy state
         pollThread = threading.Thread(target=self.PollNotBusy, args=[time])
-        pollThread.setDaemon(True)
         pollThread.start()
 
 class LacquerCoatingMachine(Machine):

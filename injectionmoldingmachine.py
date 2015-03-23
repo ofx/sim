@@ -18,7 +18,11 @@ class InjectionMoldingFinishedEvent(Event):
 
     def PollUnhalt(self, time):
         # Wait for unhalted production line
+        it = 0
         while self.productionLine.GetInputBufferMachine().IsFull():
+            if it >= 10000000:
+                return
+            it += 1
             continue
 
         # After handling the event, we trigger the next machine (dye coating)
@@ -43,7 +47,6 @@ class InjectionMoldingFinishedEvent(Event):
 
     def Handle(self, time):
         pollThread = threading.Thread(target=self.PollUnhalt, args=[time])
-        pollThread.setDaemon(True)
         pollThread.start()
 
 class InjectionMoldingBreakdownEndEvent(Event):

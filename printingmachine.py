@@ -51,7 +51,7 @@ class PrintingBreakdownStartEvent(Event):
 
 class PrintingMachine(Machine):
     batch = None
-    
+
 
     def __init__(self, productionLine):
         super(PrintingMachine, self).__init__(productionLine)
@@ -69,12 +69,12 @@ class PrintingMachine(Machine):
         self.dvdsProduced += 1
 
     def SetBrokenDown(self):
-        #assert not self.brokenDown
+        ##assert not self.brokenDown
 
         self.brokenDown = True
 
     def SetNonBrokenDown(self):
-        #assert self.brokenDown
+        ##assert self.brokenDown
 
         self.brokenDown = False
 
@@ -82,12 +82,12 @@ class PrintingMachine(Machine):
         return self.brokenDown
 
     def SetNonBusy(self):
-        assert self.isBusy
+        #assert self.isBusy
 
         self.isBusy = False
 
     def SetBusy(self):
-        assert not self.isBusy
+        #assert not self.isBusy
 
         self.isBusy = True
 
@@ -100,13 +100,13 @@ class PrintingMachine(Machine):
         if self.dvdsProduced % 200 == 0 and self.dvdsProduced > 0:
               self.productionLine.GetSimulation().AddEvent(time, PrintingBreakdownStartEvent(self.productionLine, self))
         # Assume that we're not busy, in case we are, we have some error elsewhere
-        assert not self.IsBusy()
+        ##assert not self.IsBusy()
 
         # Determine end time for event
         t1 = time + self.Wait()
 
         # Just a check that should always hold here
-        assert self.productionLine.GetOutputBufferMachine().GetPrintingMachine() == self
+        ##assert self.productionLine.GetOutputBufferMachine().GetPrintingMachine() == self
 
         # Take one from the output buffer
         self.productionLine.GetOutputBufferMachine().TakeOne()

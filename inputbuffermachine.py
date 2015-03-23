@@ -17,7 +17,7 @@ class InputBufferMachine(Machine):
 
     def IsFull(self):
         # We can never overshoot
-        assert self.elementsInBuffer < self.bufferSize + 1
+        #assert self.elementsInBuffer < self.bufferSize + 1
 
         return self.elementsInBuffer == self.bufferSize
 
@@ -26,7 +26,7 @@ class InputBufferMachine(Machine):
 
     def IsEmpty(self):
         # We can never undershoot
-        assert self.elementsInBuffer >= 0
+        #assert self.elementsInBuffer >= 0
 
         return self.elementsInBuffer == 0
 
@@ -63,7 +63,7 @@ class InputBufferMachine(Machine):
     def Touch(self, time):
         # We assume that this check has already been done, introducing this assert makes sure that
         # the caller is always properly calling this function
-        assert not self.IsFull()
+        #assert not self.IsFull()
 
         # Increase the elements in buffer by 1
         self.elementsInBuffer += 1

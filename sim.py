@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 
 import os
 import datetime
@@ -67,7 +67,7 @@ class Sim:
         (time, event) = self.eventQueue.get()
 
         # Store the schedule
-        self.schedule.append('%i: %s' % (time, event.GetEventString()))
+        #self.schedule.append('%i: %s' % (time, event.GetEventString()))
 
         # Handle the event, pass a reference to this production line instance
         event.Handle(time)
@@ -93,7 +93,7 @@ class Sim:
 
     def PrintInfo(self):
         # Wipe the last information from the screen
-        os.system('clear')
+        #os.system('clear')
 
         # Initialize empty output buffer
         outputBuffer = ''
@@ -182,7 +182,7 @@ class Sim:
     def Run(self):
         while self.Step():
             # Print some information
-            #self.PrintInfo()
+            self.PrintInfo()
 
             #for productionLine in self.productionLines:
             #    print productionLine.IsHalted()

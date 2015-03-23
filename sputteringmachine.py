@@ -10,7 +10,11 @@ class SputteringFinishedEvent(Event):
 
     def PollNotBusy(self, time):
         lacquerCoatingMachine = self.productionLine.GetLacquerCoatingMachine()
+        it = 0
         while lacquerCoatingMachine.IsBusy():
+            if it >= 10000000:
+                return
+            it += 1
             pass
 
         #while lacquerCoatingMachine.IsBrokenDown():
@@ -37,7 +41,6 @@ class SputteringFinishedEvent(Event):
     def Handle(self, time):
         # Start polling the lacquer coating machine for non-busy state
         pollThread = threading.Thread(target=self.PollNotBusy, args=[time])
-        pollThread.setDaemon(True)
         pollThread.start()
 
 class SputteringBreakdownEndEvent(Event):
