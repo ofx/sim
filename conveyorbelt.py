@@ -9,15 +9,18 @@ class ConveryorBeltFinishedEvent(Event):
 
     def PollNotBusy(self, time):
         # Wait for non-busy sputtering machine
-        # TODO: At this point we should check the machines from other production lines
-        while self.productionLine.GetSputteringMachine().IsBusy():
-            pass
+        while True:
+            for productionLine in self.productionLine.GetSimulation().GetProductionLines():
+                if productionLine.GetSputteringMachine().IsBusy():
+                    continue
 
-        # Sputtering machine is not busy anymore, unhalt processing and...
-        #self.productionLine.ContinueProcessing()
+                # Sputtering machine is not busy anymore, unhalt processing and...
+                #self.productionLine.ContinueProcessing()
 
-        # Touch the sputtering machine
-        self.productionLine.GetSputteringMachine().Touch(time)
+                # Touch the sputtering machine
+                productionLine.GetSputteringMachine().Touch(time)
+
+                return
 
     def Handle(self, time):
         # Fetch an instance of the input buffer "machine"
