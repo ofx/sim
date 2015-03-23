@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 import os
 import datetime
@@ -208,7 +208,9 @@ class Sim:
 if __name__ == "__main__":
     endCondition = int(sys.argv[1])
 
-    configuration = Configuration(int(sys.argv[2]), int(sys.argv[2]))
+    injectionMoldingMachineOneOld = sys.argv[3] in ['Yes', 'True', 'yes', 'true', 'y']
+    injectionMoldingMachineTwoOld = sys.argv[4] in ['Yes', 'True', 'yes', 'true', 'y']
+    configuration = Configuration(int(sys.argv[2]), int(sys.argv[2]), injectionMoldingMachineOneOld, injectionMoldingMachineTwoOld)
 
     simulation = Sim(endCondition, configuration)
 

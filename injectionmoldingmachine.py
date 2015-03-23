@@ -79,8 +79,11 @@ class InjectionMoldingBreakdownStartEvent(Event):
 class InjectionMoldingMachine(Machine):
     batch = None
 
-    def __init__(self, productionLine):
+    def __init__(self, productionLine, old):
         super(InjectionMoldingMachine, self).__init__(productionLine)
+
+        # Indicate whether or not this is an old machine
+        self.old = old
 
         # At start we want to schedule a breakdown
         self.scheduleBreakdown = True
@@ -119,7 +122,11 @@ class InjectionMoldingMachine(Machine):
 
         # Only schedule a breakdown if the scheduleBreakdown flag indicates to do so
         if self.scheduleBreakdown:
-            t2 = time + 160000
+            #t2 = time + 160000
+            if self.old:
+                t2 = time + self.TimeTillNextBreakdownOldMachine()
+            else:
+                t2 = time + self.TimeTillNextBreakdownNewMachine()
 
             # Add a breakdown event
             self.productionLine.GetSimulation().AddEvent(t2, InjectionMoldingBreakdownStartEvent(self.productionLine, self))
