@@ -3,6 +3,7 @@ import threading
 from machine import Machine
 from event import Event
 
+import random
 import numpy as np
 from scipy import optimize
 import scipy.special as sps
