@@ -14,7 +14,7 @@ class ConveryorBeltFinishedEvent(Event):
             pass
 
         # Sputtering machine is not busy anymore, unhalt processing and...
-        self.productionLine.ContinueProcessing()
+        #self.productionLine.ContinueProcessing()
 
         # Touch the sputtering machine
         self.productionLine.GetSputteringMachine().Touch(time)
@@ -46,7 +46,7 @@ class ConveryorBeltFinishedEvent(Event):
             we can continue processing, we touch the sputtering machine, so that the machine can fetch everything
             from the input buffer. We wait until the machine is ready full again, such that this will repeat.
             '''
-            self.productionLine.HaltProcessing()
+            #self.productionLine.HaltProcessing()
 
             # Start polling the sputtering machine for non-busy state
             pollThread = threading.Thread(target=self.PollNotBusy, args=[time])

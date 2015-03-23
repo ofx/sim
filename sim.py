@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 
 import os
 import datetime
@@ -90,7 +90,7 @@ class Sim:
 
     def PrintInfo(self):
         # Wipe the last information from the screen
-        os.system('clear')
+        #os.system('clear')
 
         # Initialize empty output buffer
         outputBuffer = ''
@@ -180,6 +180,9 @@ class Sim:
         while self.Step():
             # Print some information
             self.PrintInfo()
+
+            #for productionLine in self.productionLines:
+            #    print productionLine.IsHalted()
 
             # Check if we've reached max production
             if self.ShouldStop():

@@ -8,27 +8,27 @@ class LacquerCoatingFinishedEvent(Event):
         super(LacquerCoatingFinishedEvent, self).__init__('LacquerCoatingFinishedEvent', productionLine)
 
     def PollNotBusy(self, time):
-        dryingMachine = productionLine.GetDryingMachine()
+        dryingMachine = self.productionLine.GetDryingMachine()
         while dryingMachine.IsBusy():
             pass
 
-            # Set the time to the actual time
-            time = productionLine.GetTime()
+        # Set the time to the actual time
+        time = self.productionLine.GetTime()
 
-            # The machine is not busy anymore, transfer the batch
-            dryingMachine.Touch(time)
+        # The machine is not busy anymore, transfer the batch
+        dryingMachine.Touch(time)
 
-            # Set the sputtering machine to a non-busy state
-            # (we assume that the sputtering machine is busy)
-            lacquerCoatingMachine = self.GetProductionLine().GetLacquerCoatingMachine()
+        # Set the sputtering machine to a non-busy state
+        # (we assume that the sputtering machine is busy)
+        lacquerCoatingMachine = self.productionLine.GetLacquerCoatingMachine()
 
-            assert lacquerCoatingMachine.IsBusy()
+        assert lacquerCoatingMachine.IsBusy()
 
-            # Indicate that the machine is not busy
-            lacquerCoatingMachine.SetNonBusy()
+        # Indicate that the machine is not busy
+        lacquerCoatingMachine.SetNonBusy()
 
-            # Indicate that the machine now is empty
-            lacquerCoatingMachine.SetEmpty()
+        # Indicate that the machine now is empty
+        lacquerCoatingMachine.SetEmpty()
 
     def Handle(self, time):
         # Start polling the drying machine for non-busy state

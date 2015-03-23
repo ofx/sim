@@ -17,8 +17,8 @@ class InjectionMoldingFinishedEvent(Event):
 
     def PollUnhalt(self, time):
         # Wait for unhalted production line
-        while self.productionLine.IsHalted():
-            pass
+        while self.productionLine.GetInputBufferMachine().IsFull():
+            continue
 
         # After handling the event, we trigger the next machine (dye coating)
         dyeCoatingMachine = self.productionLine.GetDyeCoatingMachine()

@@ -8,22 +8,22 @@ class SputteringFinishedEvent(Event):
         super(SputteringFinishedEvent, self).__init__('SputteringFinishedEvent', productionLine)
 
     def PollNotBusy(self, time):
-        lacquerCoatingMachine = productionLine.GetLacquerCoatingMachine()
+        lacquerCoatingMachine = self.productionLine.GetLacquerCoatingMachine()
         while lacquerCoatingMachine.IsBusy():
             pass
 
-        while lacquerCoatingMachine.IsBrokenDown():
-            pass
+        #while lacquerCoatingMachine.IsBrokenDown():
+        #    pass
 
         # Set the time to the actual time
-        time = productionLine.GetTime()
+        time = self.productionLine.GetTime()
 
         # The machine is not busy anymore, transfer the batch
         lacquerCoatingMachine.Touch(time)
 
         # Set the sputtering machine to a non-busy state
         # (we assume that the sputtering machine is busy)
-        sputteringMachine = self.GetProductionLine().GetSputteringMachine()
+        sputteringMachine = self.productionLine.GetSputteringMachine()
 
         assert sputteringMachine.IsBusy()
 
@@ -138,18 +138,19 @@ class SputteringMachine(Machine):
             elementsToAdd  = elementsInBuffer
             elementsToTake = elementsInBuffer
 
+        print 'Elements to take: %i' % elementsToTake
+
+        print 'Line: %i' % self.productionLine.GetProductionLineNumber()
+
         # Take a number of elements from the input buffer
         inputBufferMachine.Take(elementsToTake)
-        
-        # check if prod line was halted, if so, unhalt
-        if self.productionLine.IsHalted():
-            self.productionLine.ContinueProcessing()
 
         # Add the elements from the input buffer to the batch
         self.elementsInBatch += elementsToAdd
 
         # We need to check if the batch is full, if so, we schedule a new event indicating that the sputtering
         # is done
+        print 'Full: %r' % self.IsFull()
         if self.IsFull():
             batchSize = self.productionLine.GetConfiguration().GetBatchSize()
             # sputtering takes 10 seconds per DVD, all DVD's need to be processed before we move on.
@@ -157,6 +158,8 @@ class SputteringMachine(Machine):
 
             # Add the event
             self.productionLine.GetSimulation().AddEvent(t1, SputteringFinishedEvent(self.productionLine))
+
+            print 'Time: %i' % t1
 
             # Indicate that this machine is busy
             self.SetBusy()
@@ -166,4 +169,3 @@ class SputteringMachine(Machine):
         if random.randint(0, 99) < 3:
             t3 = time + 300000
             self.productionLine.GetSimulation().AddEvent(t3, SputteringBreakdownStartEvent(self.productionLine))
-        
