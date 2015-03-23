@@ -62,7 +62,7 @@ class ConveyorBelt(Machine):
 
     def Touch(self, time):
         # every DVD spends 5 mins on the conveyor belt
-        t1 = time + 50000
+        t1 = time + 300000
 
         # Add the event
         self.productionLine.GetSimulation().AddEvent(t1, ConveryorBeltFinishedEvent(self.productionLine))
